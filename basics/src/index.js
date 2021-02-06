@@ -1,23 +1,35 @@
 import { GraphQLServer } from 'graphql-yoga'
 
-// Type definitions (schema)
+// Scalar types - String, Boolean, Int, Float, ID
 
-const typeDefs=`
+// Type definitions (schema)
+const typeDefs = `
     type Query {
-        hello: String!
-        name: String!
+        title: String!
+        price: Float!
+        releaseYear: Int
+        rating: Float
+        inStock: Boolean!
     }
 `
 
 // Resolvers
-
 const resolvers = {
     Query: {
-        hello() {
-            return 'This is my first query!'
+        title() {
+            return 'The War of Art'
         },
-        name() {
-            return 'jo'
+        price() {
+            return 1207.9
+        },
+        releaseYear() {
+            return null
+        },
+        rating() {
+            return 50
+        },
+        inStock() {
+            return false
         }
     }
 }
@@ -30,3 +42,5 @@ const server = new GraphQLServer({
 server.start(() => {
     console.log('The server is up!')
 })
+
+//pkill -f node
