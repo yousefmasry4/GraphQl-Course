@@ -1,4 +1,5 @@
 import { GraphQLServer } from 'graphql-yoga'
+import uuidv4 from 'uuid/v4'
 
 // Scalar types - String, Boolean, Int, Float, ID
 
@@ -68,6 +69,10 @@ const typeDefs = `
         post: Post!
     }
 
+    type Mutation {
+        createUser(name: String!, email: String!, age: Int): User!
+    }
+
     type User {
         id: ID!
         name: String!
@@ -131,6 +136,23 @@ const resolvers = {
             }
         }
     },
+    Mutation:{
+        createUser(parent, args, ctx, info){
+            if(users.some((u)=>u.email === args.email)){
+                throw new Error('Email taken')
+            }
+            const user = {
+                id: uuidv4(),
+                name: args.name,
+                email: args.email,
+                age: args.age
+            }
+
+            users.push(user)
+            return user
+        }   
+    },
+
     Post: {
         author(parent, args, ctx, info) {
             return users.find((user) => {
@@ -141,10 +163,7 @@ const resolvers = {
             if(parent.comments == null)
                 return null
             return parent.comments.map(element => {
-                console.log(comment.find((c)=>{
-                    
-                    return element === c.id
-                }))
+
                 return comment.find((c)=>{
                     
                     return element === c.id
