@@ -1,9 +1,32 @@
-import{
-    msg,
-    getGreeting
-} from './myModule.js'
+import { GraphQLServer } from 'graphql-yoga'
 
-import sad from './myModule.js'
-console.log(msg)
-console.log(sad)
-console.log(getGreeting("jo"))
+// Type definitions (schema)
+
+const typeDefs=`
+    type Query {
+        hello: String!
+        name: String!
+    }
+`
+
+// Resolvers
+
+const resolvers = {
+    Query: {
+        hello() {
+            return 'This is my first query!'
+        },
+        name() {
+            return 'jo'
+        }
+    }
+}
+
+const server = new GraphQLServer({
+    typeDefs,
+    resolvers
+})
+
+server.start(() => {
+    console.log('The server is up!')
+})
